@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>外籍患者就诊预约 | 卓正医疗</title>
+  <meta name="description" content="外籍患者在线就诊预约。多语言医生团队，中英日三语服务，智能 AI 陪诊助手为您定制就诊方案。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* 独立预约站：首页主视觉 */
+    .booking-hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #0d6b6b 0%, #1e8a8a 45%, #2aa5a5 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+    .booking-hero::before,
+    .booking-hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+    .booking-hero::before {
+      width: 480px; height: 480px; top: -160px; right: -140px;
+    }
+    .booking-hero::after {
+      width: 360px; height: 360px; bottom: -120px; left: -100px;
+    }
+    .booking-hero__inner {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 20px;
+    }
+    .booking-hero__logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 28px;
+      opacity: 0.95;
+    }
+    .booking-hero__logo svg {
+      flex: none;
+    }
+    .booking-hero__eyebrow {
+      display: inline-block;
+      padding: 6px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.92);
+      margin-bottom: 18px;
+    }
+    .booking-hero__title {
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 0 0 16px;
+    }
+    .booking-hero__sub {
+      max-width: 560px;
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0 auto 36px;
+    }
+    .booking-hero__cta {
+      display: inline-block;
+      padding: 16px 44px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0d6b6b;
+      background: #fff;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .booking-hero__cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+    }
+    .booking-hero__note {
+      margin-top: 22px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+    .booking-features {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 0 20px 40px;
+    }
+    .booking-features__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(4px);
+    }
+    .booking-features__item svg { flex: none; }
+    @media (max-width: 640px) {
+      .booking-hero__cta { width: 100%; max-width: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部公告栏（语言切换） -->
+  <div class="top-bar">
+    <div class="container top-bar__inner">
+      <span class="top-bar__text" data-i18n="topbar.hotline">24小时多语言服务热线：400-888-XXXX</span>
+      <div class="top-bar__lang">
+        <span class="top-bar__current"><span data-i18n="topbar.lang">当前语言：</span><strong>中文</strong></span>
+        <button class="top-bar__switch" id="langSwitch" type="button" aria-label="切换语言">
+          <span data-i18n="topbar.switch">切换</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主视觉：外籍患者就诊预约 -->
+  <section class="booking-hero">
+    <div class="booking-hero__inner">
+      <span class="booking-hero__logo" aria-label="卓正医疗">
+        <svg viewBox="0 0 120 32" width="120" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="28" height="28" rx="6" fill="#fff" opacity="0.18"/>
+          <path d="M11 16H21M16 11V21" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+          <text x="38" y="22" font-family="Noto Sans SC, Inter, sans-serif" font-size="18" font-weight="700" fill="#ffffff">卓正医疗</text>
+        </svg>
+      </span>
+      <span class="booking-hero__eyebrow" data-i18n="booking.eyebrow">International Patient Booking</span>
+      <h1 class="booking-hero__title" data-i18n="booking.title">外籍患者就诊预约</h1>
+      <p class="booking-hero__sub" data-i18n="booking.sub">填写 1 分钟就诊需求问卷，AI 陪诊助手将为您智能匹配科室、项目与医生，生成专属就诊方案。全程中英日三语服务。</p>
+      <button type="button" class="booking-hero__cta" id="openQuizBtnHero" data-i18n="hero.cta">立即预约</button>
+      <p class="booking-hero__note" data-i18n="booking.note">预约免费 · 提交后 15 分钟内客服响应</p>
+    </div>
+    <div class="booking-features">
+      <span class="booking-features__item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 3L4 7V13C4 17 7 20 12 21C17 20 20 17 20 13V7L12 3Z" stroke="#fff" stroke-width="1.8"/><path d="M9 12L11 14L15 10" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-i18n="booking.feat1">合规就诊</span>
+      </span>
+      <span class="booking-features__item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.8"/><path d="M12 7V12L15 14" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span data-i18n="booking.feat2">当天完成</span>
+      </span>
+      <span class="booking-features__item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M3 6L10 7L12 10L14 7L21 6V18L14 17L12 14L10 17L3 18V6Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span data-i18n="booking.feat3">中英日三语</span>
+      </span>
+      <span class="booking-features__item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M5 4H9L11 9L8.5 10.5C9.5 12.5 11.5 14.5 13.5 15.5L15 13L20 15V19C20 20 19 21 18 21C10 21 3 14 3 6C3 5 4 4 5 4Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span data-i18n="booking.feat4">24h 热线</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- AI 助手气泡 -->
+  <button class="ai-bubble" id="aiBubble" aria-label="AI助手">
+    <div class="ai-bubble__avatar">
+      <svg viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="23" fill="url(#aiGradient)"/>
+        <defs>
+          <linearGradient id="aiGradient" x1="0" y1="0" x2="48" y2="48">
+            <stop offset="0" stop-color="#1e8a8a"/>
+            <stop offset="1" stop-color="#0d6b6b"/>
+          </linearGradient>
+        </defs>
+        <circle cx="18" cy="22" r="2.5" fill="#fff"/>
+        <circle cx="30" cy="22" r="2.5" fill="#fff"/>
+        <path d="M17 29Q24 33 31 29" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <circle cx="14" cy="16" r="1" fill="#fff" opacity="0.6"/>
+        <circle cx="34" cy="16" r="1" fill="#fff" opacity="0.6"/>
+      </svg>
+    </div>
+    <span class="ai-bubble__label" data-i18n="aiBubble.label">AI 陪诊</span>
+    <span class="ai-bubble__dot"></span>
+  </button>
+
+  <!-- 问卷弹窗（含 AI 方案对话页） -->
+  <div class="modal" id="quizModal" aria-hidden="true" role="dialog">
+    <div class="modal__overlay" id="quizOverlay"></div>
+    <div class="modal__content">
+      <button type="button" class="modal__close" id="quizClose" aria-label="关闭">×</button>
+      <div class="quiz" id="quiz">
+        <div class="quiz__header">
+          <h3 data-i18n="quiz.title">外籍患者就诊预约</h3>
+          <div class="quiz__progress">
+            <div class="quiz__progress-bar" id="quizProgressBar"></div>
+          </div>
+          <span class="quiz__progress-text" id="quizProgressText">第 1 步 / 共 8 步</span>
+        </div>
+
+        <div class="quiz__body">
+          <!-- Q1 -->
+          <div class="quiz__step is-active" data-step="1">
+            <h4 class="quiz__question" data-i18n="quiz.q1">Q1 您的国籍 & 当前所在地？</h4>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-q1="overseas" data-i18n="quiz.q1.opt1">海外他国居民</button>
+              <button type="button" class="quiz__option" data-q1="china" data-i18n="quiz.q1.opt2">中国境内常住（持有居留许可）</button>
+            </div>
+            <!-- 海外居民的国家/地区选择（默认隐藏） -->
+            <div class="quiz__sub-options" id="q1SubOptions" hidden>
+              <p class="quiz__sub-title" data-i18n="quiz.q1.subtitle">请选择您的国家/地区</p>
+              <select class="quiz__country-select" id="q1CountrySelect">
+                <option value="" data-i18n="quiz.q1.select">请选择国家/地区</option>
+                <option value="美国">美国 United States</option>
+                <option value="加拿大">加拿大 Canada</option>
+                <option value="英国">英国 United Kingdom</option>
+                <option value="澳大利亚">澳大利亚 Australia</option>
+                <option value="新西兰">新西兰 New Zealand</option>
+                <option value="日本">日本 Japan</option>
+                <option value="韩国">韩国 South Korea</option>
+                <option value="新加坡">新加坡 Singapore</option>
+                <option value="马来西亚">马来西亚 Malaysia</option>
+                <option value="泰国">泰国 Thailand</option>
+                <option value="印度尼西亚">印度尼西亚 Indonesia</option>
+                <option value="菲律宾">菲律宾 Philippines</option>
+                <option value="越南">越南 Vietnam</option>
+                <option value="印度">印度 India</option>
+                <option value="阿联酋">阿联酋 UAE</option>
+                <option value="沙特阿拉伯">沙特阿拉伯 Saudi Arabia</option>
+                <option value="德国">德国 Germany</option>
+                <option value="法国">法国 France</option>
+                <option value="意大利">意大利 Italy</option>
+                <option value="西班牙">西班牙 Spain</option>
+                <option value="荷兰">荷兰 Netherlands</option>
+                <option value="瑞士">瑞士 Switzerland</option>
+                <option value="瑞典">瑞典 Sweden</option>
+                <option value="俄罗斯">俄罗斯 Russia</option>
+                <option value="巴西">巴西 Brazil</option>
+                <option value="墨西哥">墨西哥 Mexico</option>
+                <option value="南非">南非 South Africa</option>
+                <option value="其他">其他 Other</option>
+              </select>
+              <div class="quiz__quick-countries">
+                <span class="quiz__quick-label" data-i18n="quiz.q1.hot">热门国家：</span>
+                <button type="button" class="quiz__quick-country">美国</button>
+                <button type="button" class="quiz__quick-country">日本</button>
+                <button type="button" class="quiz__quick-country">韩国</button>
+                <button type="button" class="quiz__quick-country">新加坡</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="quiz__step" data-step="2">
+            <h4 class="quiz__question" data-i18n="quiz.q2">Q2 您计划以何种方式入境/在华就诊？</h4>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-i18n="quiz.q2.opt1">免签入境/144h过境免签（短期旅游顺带治疗）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q2.opt2">旅游签证L签</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q2.opt3">私人事务S2签证（现行合规签证类别，适用于来华就医等短期私人事务）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q2.opt4">已在华居住，持有居留许可</button>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="quiz__step" data-step="3">
+            <h4 class="quiz__question" data-i18n="quiz.q3">Q3 您在中国大陆的可停留时长？</h4>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-i18n="quiz.q3.opt1">3–7天</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q3.opt2">7–15天</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q3.opt3">15–30天</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q3.opt4">30天以上</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q3.opt5">长期在华</button>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="quiz__step" data-step="4">
+            <h4 class="quiz__question" data-i18n="quiz.q4">Q4 您本次想咨询/治疗的具体项目？</h4>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt1">齿科（种植、正畸、洁牙、根管治疗等）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt2">医学美容（注射美容、光子嫩肤、皮肤管理）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt3">儿科与儿童健康（疫苗、生长发育评估）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt4">个性化体检（高端定制体检方案）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt5">皮肤科（过敏、湿疹、皮肤问题诊疗）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt6">眼科（视力检查、干眼症治疗）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt7">耳鼻喉科（鼻炎、听力检查等）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt8">物理治疗与康复（运动损伤、术后康复）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt9">妇产科（孕前检查、产检、妇科咨询）</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q4.opt10">其他诊疗项目</button>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="quiz__step" data-step="5">
+            <h4 class="quiz__question" data-i18n="quiz.q5">Q5 意向就诊城市？</h4>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-i18n="quiz.q5.opt1">上海</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q5.opt2">北京</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q5.opt3">广州</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q5.opt4">深圳</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q5.opt5">杭州</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q5.opt6">其他城市</button>
+            </div>
+          </div>
+
+          <!-- Q6 -->
+          <div class="quiz__step" data-step="6">
+            <h4 class="quiz__question" data-i18n="quiz.q6">Q6 您预计到店就诊日期？</h4>
+            <div class="quiz__calendar">
+              <div class="quiz__calendar-nav">
+                <button type="button" class="quiz__calendar-nav-btn" id="calPrev" aria-label="上个月" data-i18n-aria-label="quiz.q6.prevMonth">‹</button>
+                <div class="quiz__calendar-title" id="calTitle"></div>
+                <button type="button" class="quiz__calendar-nav-btn" id="calNext" aria-label="下个月" data-i18n-aria-label="quiz.q6.nextMonth">›</button>
+              </div>
+              <div class="quiz__calendar-grid" id="calGrid"></div>
+              <div class="quiz__calendar-actions">
+                <button type="button" class="quiz__option quiz__option--inline" id="calUndecided" data-i18n="quiz.q6.undecided">暂未确定</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q7 -->
+          <div class="quiz__step" data-step="7">
+            <h4 class="quiz__question" data-i18n="quiz.q7">Q7 您的首选沟通方式？</h4>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-i18n="quiz.q7.opt1">微信沟通</button>
+              <button type="button" class="quiz__option" data-i18n="quiz.q7.opt2">电话直接沟通</button>
+            </div>
+          </div>
+
+          <!-- Step 8: 联系信息 -->
+          <div class="quiz__step" data-step="8">
+            <h4 class="quiz__question" data-i18n="quiz.q8">最后一步，请留下您的联系方式</h4>
+            <div class="quiz__form">
+              <label class="quiz__field">
+                <span data-i18n-html="quiz.q8.nameHtml">姓名 <em>*</em></span>
+                <input type="text" name="quiz_name" required placeholder="您的姓名" data-i18n-placeholder="quiz.q8.name.ph" />
+              </label>
+              <label class="quiz__field">
+                <span data-i18n-html="quiz.q8.phoneHtml">手机号（选填）</span>
+                <input type="tel" name="quiz_phone" placeholder="联系电话（含国家代码）" data-i18n-placeholder="quiz.q8.phone.ph" />
+              </label>
+              <label class="quiz__field">
+                <span data-i18n="quiz.q8.wechat">微信号</span>
+                <input type="text" name="quiz_wechat" placeholder="微信号（选填）" data-i18n-placeholder="quiz.q8.wechat.ph" />
+              </label>
+              <label class="quiz__field">
+                <span data-i18n="quiz.q8.email">邮箱</span>
+                <input type="email" name="quiz_email" placeholder="电子邮箱（选填）" data-i18n-placeholder="quiz.q8.email.ph" />
+              </label>
+              <div class="quiz__field quiz__field--hotel">
+                <span data-i18n="quiz.q8.hotel">入住酒店</span>
+                <input type="text" id="hotelInput" class="quiz__hotel-input" placeholder="请输入酒店名称（中文或英文）" data-i18n-placeholder="quiz.q8.hotel.ph" autocomplete="off" />
+                <div class="quiz__hotel-results" id="hotelResults" hidden></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="quiz__footer">
+          <button type="button" class="btn btn--ghost" id="quizPrev" disabled data-i18n="quiz.prev">上一步</button>
+          <button type="button" class="btn btn--primary" id="quizNext" data-i18n="quiz.next">下一步</button>
+          <button type="button" class="btn btn--primary" id="quizSubmit" hidden data-i18n="quiz.submit">提交预约</button>
+        </div>
+      </div>
+
+      <!-- 中转页：AI 陪诊分析中 -->
+      <div class="quiz__loading" id="quizLoading" hidden>
+        <div class="quiz__loading-avatar">
+          <svg viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="23" fill="url(#aiLoadGradient)"/>
+            <defs>
+              <linearGradient id="aiLoadGradient" x1="0" y1="0" x2="48" y2="48">
+                <stop offset="0" stop-color="#1e8a8a"/>
+                <stop offset="1" stop-color="#0d6b6b"/>
+              </linearGradient>
+            </defs>
+            <circle cx="18" cy="22" r="2.5" fill="#fff"/>
+            <circle cx="30" cy="22" r="2.5" fill="#fff"/>
+            <path d="M17 29Q24 33 31 29" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="quiz__loading-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="quiz__loading-text">
+          <p class="quiz__loading-line is-active" data-i18n="loading.1">AI陪诊正在了解您的情况...</p>
+          <p class="quiz__loading-line" data-i18n="loading.2">AI陪诊正在制定适合您的就诊方案...</p>
+        </div>
+      </div>
+
+      <!-- AI 方案对话页 -->
+      <div class="quiz__ai-plan" id="quizAiPlan" hidden>
+        <div class="quiz__ai-plan__header">
+          <div class="quiz__ai-plan__avatar">
+            <svg viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="23" fill="#1e8a8a"/>
+              <circle cx="18" cy="22" r="2.5" fill="#fff"/>
+              <circle cx="30" cy="22" r="2.5" fill="#fff"/>
+              <path d="M17 29Q24 33 31 29" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="quiz__ai-plan__info">
+            <strong data-i18n="aiplan.title">AI 陪诊助手</strong>
+            <span data-i18n="aiplan.subtitle">已为您生成就诊方案</span>
+          </div>
+        </div>
+
+        <div class="quiz__ai-plan__body" id="aiPlanBody">
+          <!-- 方案内容由 JS 动态生成 -->
+        </div>
+
+        <div class="quiz__ai-plan__footer">
+          <button type="button" class="ai-plan__confirm" id="aiPlanConfirm" hidden data-i18n="aiplan.confirm">确认选择</button>
+          <p class="ai-plan__picked" id="aiPlanPicked" hidden></p>
+          <div class="ai-plan__input-row">
+            <input type="text" class="ai-plan__input" id="aiPlanInput" placeholder="输入您的问题..." data-i18n-placeholder="aiplan.placeholder" />
+            <button type="button" class="ai-plan__send" id="aiPlanSend" aria-label="发送" data-i18n-aria-label="aiplan.send">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 12L21 4L13 22L11 14L3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" async></script>
+  <script src="i18n.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
