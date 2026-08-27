@@ -58,6 +58,11 @@
     .booking-hero__logo svg {
       flex: none;
     }
+    .booking-hero__logo-img {
+      height: 38px;
+      width: auto;
+      display: block;
+    }
     .booking-hero__eyebrow {
       display: inline-block;
       padding: 6px 16px;
@@ -133,7 +138,6 @@
   <!-- 顶部公告栏（语言切换） -->
   <div class="top-bar">
     <div class="container top-bar__inner">
-      <span class="top-bar__text" data-i18n="topbar.hotline">24小时多语言服务热线：400-888-XXXX</span>
       <div class="top-bar__lang">
         <span class="top-bar__current"><span data-i18n="topbar.lang">当前语言：</span><strong>中文</strong></span>
         <button class="top-bar__switch" id="langSwitch" type="button" aria-label="切换语言">
@@ -147,17 +151,12 @@
   <section class="booking-hero">
     <div class="booking-hero__inner">
       <span class="booking-hero__logo" aria-label="卓正医疗">
-        <svg viewBox="0 0 120 32" width="120" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="28" height="28" rx="6" fill="#fff" opacity="0.18"/>
-          <path d="M11 16H21M16 11V21" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
-          <text x="38" y="22" font-family="Noto Sans SC, Inter, sans-serif" font-size="18" font-weight="700" fill="#ffffff">卓正医疗</text>
-        </svg>
+        <img src="pic/卓正医疗反白Logo透明底.png" alt="卓正医疗" class="booking-hero__logo-img" />
       </span>
       <span class="booking-hero__eyebrow" data-i18n="booking.eyebrow">International Patient Booking</span>
       <h1 class="booking-hero__title" data-i18n="booking.title">外籍患者就诊预约</h1>
-      <p class="booking-hero__sub" data-i18n="booking.sub">填写 1 分钟就诊需求问卷，AI 陪诊助手将为您智能匹配科室、项目与医生，生成专属就诊方案。全程中英日三语服务。</p>
-      <button type="button" class="booking-hero__cta" id="openQuizBtnHero" data-i18n="hero.cta">立即预约</button>
-      <p class="booking-hero__note" data-i18n="booking.note">预约免费 · 提交后 15 分钟内客服响应</p>
+      <p class="booking-hero__sub" data-i18n="booking.sub">填写 1 分钟就诊需求问卷，我们将为您介绍合适的科室、项目与医生，生成专属就诊方案。</p>
+      <button type="button" class="booking-hero__cta" id="openQuizBtnHero" data-i18n="hero.cta">免费预约</button>
     </div>
     <div class="booking-features">
       <span class="booking-features__item">
@@ -166,15 +165,15 @@
       </span>
       <span class="booking-features__item">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.8"/><path d="M12 7V12L15 14" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <span data-i18n="booking.feat2">当天完成</span>
+        <span data-i18n="booking.feat2">循证医疗</span>
       </span>
       <span class="booking-features__item">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M3 6L10 7L12 10L14 7L21 6V18L14 17L12 14L10 17L3 18V6Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
-        <span data-i18n="booking.feat3">中英日三语</span>
+        <span data-i18n="booking.feat3">多语言支持</span>
       </span>
       <span class="booking-features__item">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M5 4H9L11 9L8.5 10.5C9.5 12.5 11.5 14.5 13.5 15.5L15 13L20 15V19C20 20 19 21 18 21C10 21 3 14 3 6C3 5 4 4 5 4Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
-        <span data-i18n="booking.feat4">24h 热线</span>
+        <span data-i18n="booking.feat4">专属人工客服</span>
       </span>
     </div>
   </section>

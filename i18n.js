@@ -9,19 +9,18 @@
 
   var I18N = {
     zh: {
-      "topbar.hotline": "24小时多语言服务热线：400-888-XXXX",
       "topbar.lang": "当前语言：",
       "topbar.switch": "切换",
       "topbar.chinese": "中文",
 
       "booking.eyebrow": "International Patient Booking",
       "booking.title": "外籍患者就诊预约",
-      "booking.sub": "填写 1 分钟就诊需求问卷，AI 陪诊助手将为您智能匹配科室、项目与医生，生成专属就诊方案。全程中英日三语服务。",
-      "booking.note": "预约免费 · 提交后 15 分钟内客服响应",
+      "booking.sub": "填写 1 分钟就诊需求问卷，我们将为您介绍合适的科室、项目与医生，生成专属就诊方案。",
+      "booking.note": "",
       "booking.feat1": "合规就诊",
-      "booking.feat2": "当天完成",
-      "booking.feat3": "中英日三语",
-      "booking.feat4": "24h 热线",
+      "booking.feat2": "循证医疗",
+      "booking.feat3": "多语言支持",
+      "booking.feat4": "专属人工客服",
 
       "nav.home": "首页",
       "nav.about": "关于我们",
@@ -51,7 +50,7 @@
 
       "hero.title1": "为外籍人士提供优质便捷的",
       "hero.title2": "医疗服务",
-      "hero.cta": "立即预约",
+      "hero.cta": "免费预约",
 
       "about.eyebrow": "关于我们",
       "about.title1": "以循证医学为核心理念的",
@@ -233,19 +232,18 @@
     },
 
     en: {
-      "topbar.hotline": "24/7 Multilingual Hotline: 400-888-XXXX",
       "topbar.lang": "Language: ",
       "topbar.switch": "Switch",
       "topbar.chinese": "中文",
 
       "booking.eyebrow": "International Patient Booking",
       "booking.title": "International Patient Booking",
-      "booking.sub": "Fill out a 1-minute needs questionnaire and our AI assistant will match you with the right department, treatment and doctor, delivering a personalized care plan in Chinese, English and Japanese.",
-      "booking.note": "Free booking · Response within 15 minutes",
+      "booking.sub": "Fill out a 1-minute needs questionnaire and we will introduce you to the right department, treatment and doctor, delivering a personalized care plan.",
+      "booking.note": "",
       "booking.feat1": "Compliant care",
-      "booking.feat2": "Same-day completion",
-      "booking.feat3": "CN / EN / JA",
-      "booking.feat4": "24h hotline",
+      "booking.feat2": "Evidence-based care",
+      "booking.feat3": "Multilingual support",
+      "booking.feat4": "Dedicated human support",
 
       "nav.home": "Home",
       "nav.about": "About Us",
@@ -275,7 +273,7 @@
 
       "hero.title1": "Quality and Convenient",
       "hero.title2": "Medical Services for Expats",
-      "hero.cta": "Book Now",
+      "hero.cta": "Book for Free",
 
       "about.eyebrow": "About Us",
       "about.title1": "An International Medical Group",
@@ -457,19 +455,18 @@
     },
 
     ja: {
-      "topbar.hotline": "24時間多言語ホットライン：400-888-XXXX",
       "topbar.lang": "現在の言語：",
       "topbar.switch": "切替",
       "topbar.chinese": "中文",
 
       "booking.eyebrow": "International Patient Booking",
       "booking.title": "外国人患者さまのご予約",
-      "booking.sub": "1分のご要望アンケートにお答えいただくと、AI陪診アシスタントが科室・項目・医師をマッチングし、専用の受診プランをご提案します。中英日三言語対応。",
-      "booking.note": "予約無料 · 送信後15分以内にカスタマー対応",
+      "booking.sub": "1分のご要望アンケートにお答えいただくと、担当スタッフが適切な科室・項目・医師をご紹介し、専用の受診プランをご提案します。",
+      "booking.note": "",
       "booking.feat1": "コンプライアンス診療",
-      "booking.feat2": "当日完了",
-      "booking.feat3": "中英日対応",
-      "booking.feat4": "24h ホットライン",
+      "booking.feat2": "エビデンスに基づく医療",
+      "booking.feat3": "多言語対応",
+      "booking.feat4": "専任スタッフ対応",
 
       "nav.home": "ホーム",
       "nav.about": "私たちについて",
@@ -499,7 +496,7 @@
 
       "hero.title1": "外国人向けの質の高い便利な",
       "hero.title2": "医療サービス",
-      "hero.cta": "今すぐ予約",
+      "hero.cta": "無料予約",
 
       "about.eyebrow": "私たちについて",
       "about.title1": "根拠に基づく医療を核とする",
