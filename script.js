@@ -436,7 +436,6 @@
     const prevBtn = document.getElementById("quizPrev");
     const nextBtn = document.getElementById("quizNext");
     const submitBtn = document.getElementById("quizSubmit");
-    const loadingEl = document.getElementById("quizLoading");
     const aiPlanEl = document.getElementById("quizAiPlan");
     const aiPlanBody = document.getElementById("aiPlanBody");
     const aiPlanConfirm = document.getElementById("aiPlanConfirm");
@@ -464,44 +463,16 @@
       // 重置日历选中
       if (calUndecidedBtn) calUndecidedBtn.classList.remove("is-selected");
       if (typeof calRender === "function") calRender();
-      // 显示问卷区，隐藏中转页和方案页
+      // 显示问卷区，隐藏方案页
       quiz.style.display = "";
-      if (loadingEl) loadingEl.hidden = true;
       if (aiPlanEl) aiPlanEl.hidden = true;
       updateUI();
     }
 
     // ---------- 弹窗开关 ----------
     // 每次打开都呼起全新问卷流程
-    // restore === true（仅右下角 AI 气泡显式传入）时才恢复上次就诊记录、
-    // 直接进入方案页；页面上的"立即预约"按钮每次都呼起全新问卷。
-    function openModal(restore) {
-      if (restore === true) {
-        // 若已有就诊记录（之前填过问卷），跳过 resetQuiz，直接进入方案页
-        // 让用户从 AI 气泡点击进来即看到与上次相同的方案/医生/预约进度
-        var lastAnswers = (window.__getLastAnswers && window.__getLastAnswers()) || null;
-        if (lastAnswers) {
-        // 恢复 answers + 姓名到表单（renderAiPlan 会读取）
-        Object.keys(answers).forEach(function (k) { delete answers[k]; });
-        Object.keys(lastAnswers.answers || {}).forEach(function (k) {
-          answers[k] = lastAnswers.answers[k];
-        });
-        if (lastAnswers.name) {
-          var nameEl = quiz.querySelector("[name='quiz_name']");
-          if (nameEl) nameEl.value = lastAnswers.name;
-        }
-        // 跳过问卷，进入 AI 方案页
-        if (quiz) quiz.style.display = "none";
-        if (loadingEl) loadingEl.hidden = true;
-        if (aiPlanEl) aiPlanEl.hidden = false;
-        modal.classList.add("is-open");
-        modal.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-        // 渲染完整方案（含追问选项 A/B/C）
-        renderAiPlan();
-        return;
-        }
-      }
+    // 页面上的"立即预约"/预约助手气泡每次都打开全新问卷，不再恢复上次记录。
+    function openModal() {
       resetQuiz();
       modal.classList.add("is-open");
       modal.setAttribute("aria-hidden", "false");
@@ -513,8 +484,8 @@
       document.body.style.overflow = "";
     }
 
-    // 暴露给右下角 AI 气泡调用（气泡 = 恢复上次进度；按钮 = 全新问卷）
-    window.__openQuizModal = function () { openModal(true); };
+    // 暴露给右下角预约助手气泡调用：总是打开全新问卷让用户填写
+    window.__openQuizModal = function () { openModal(); };
 
     // 切换语言时，若 AI 方案页正在展示，用当前语言重渲染其内容
     document.addEventListener("langchange", function () {
@@ -718,34 +689,51 @@
             // 同步保存问卷答案 + 姓名（供 AI 气泡再次点击时复用）
             answers: JSON.parse(JSON.stringify(answers)),
           });
+          // 通知气泡旁的 agent 总结浮层展示
+          if (window.__showBubbleCard) {
+            // 日期去掉年份，如 "2026年8月30日" → "8月30日"
+            const shortDate = String(date || "").replace(/^\d{4}年/, "");
+            window.__showBubbleCard({
+              summary: country + "国籍 · " + entry + " · " + city + " · " + shortDate
+            });
+          }
         }
 
-        // 隐藏整个问卷区，显示中转页
+        // 提交预约后，将表单推送到钉钉机器人（私发给指定接收人）
+        try {
+          const emailEl = quiz.querySelector("[name='quiz_email']");
+          let project = answers[4];
+          if (Array.isArray(project)) project = project.join("、");
+          const nowDt = new Date();
+          const pad2 = function (n) { return n < 10 ? "0" + n : "" + n; };
+          const submitTime = nowDt.getFullYear() + "-" + pad2(nowDt.getMonth() + 1) + "-" + pad2(nowDt.getDate()) + " " + pad2(nowDt.getHours()) + ":" + pad2(nowDt.getMinutes());
+          if (window.pushBookingToDingTalk) {
+            window.pushBookingToDingTalk({
+              name: nameEl.value.trim(),
+              phone: phoneEl && phoneEl.value ? phoneEl.value.trim() : "",
+              email: emailEl && emailEl.value ? emailEl.value.trim() : "",
+              country: (answers[1] || "").replace("海外他国居民 - ", "").replace("中国境内常住（持有居留许可）", "中国境内常住"),
+              entry: answers[2] || "",
+              stay: answers[3] || "",
+              project: project || "",
+              city: answers[5] || "",
+              date: answers[6] || "",
+              contact: answers[7] || "",
+              time: submitTime
+            });
+          }
+        } catch (e) {
+          console.warn("钉钉推送异常：", e);
+        }
+
+        // 提交后直接进入 AI 方案页（无中转过渡）
         quiz.style.display = "none";
-        if (loadingEl) loadingEl.hidden = false;
-
-        // 中转页文案轮播（两句话交替）
-        const loadingLines = loadingEl ? loadingEl.querySelectorAll(".quiz__loading-line") : [];
-        let loadingIdx = 0;
-        if (loadingLines.length > 0) {
-          loadingLines[0].classList.add("is-active");
-          const loadingTimer = setInterval(function () {
-            loadingLines.forEach(function (l) { l.classList.remove("is-active"); });
-            loadingIdx = (loadingIdx + 1) % loadingLines.length;
-            loadingLines[loadingIdx].classList.add("is-active");
-          }, 2000);
-        }
-
-        // 4 秒后切换到 AI 方案页
-        setTimeout(function () {
-          if (loadingEl) loadingEl.hidden = true;
-          if (aiPlanEl) aiPlanEl.hidden = false;
-          renderAiPlan();
-        }, 4000);
+        if (aiPlanEl) aiPlanEl.hidden = false;
+        renderAiPlan();
       });
     }
 
-    // ---------- 生成 AI 就诊方案 ----------
+    // ---------- 预约助手：展示就诊方案（项目介绍 / 医生介绍）+ 重新填写问卷按钮（无互动问答） ----------
     function renderAiPlan() {
       if (!aiPlanBody) return;
       planMode = "aiplan";
@@ -759,31 +747,29 @@
 
       // Q1 国籍/所在地
       const country = answers[1] ? answers[1].replace("海外他国居民 - ", "").replace("中国境内常住（持有居留许可）", "中国境内常住") : "海外";
-
       // Q2 入境方式
       const entry = answers[2] || "免签入境";
-
-      // Q5  城市
+      // Q5 城市
       const city = answers[5] || "上海";
-
       // Q6 日期
       const date = answers[6] || "暂未确定";
-
       // 城市 key（用于诊所库）
       const cityKey = detectCity(city);
 
-      // 第一轮：完整方案（开场问候 + 合规说明 + 项目清单 + 诊所推荐）
       const _T = function (k, v) { return window.__t ? window.__t(k, v) : ""; };
       aiPlanBody.innerHTML = [
+        // 开场问候
         '<div class="ai-plan__msg">',
         '  <p>' + deptT("greet", { name: userName, country: country, entry: entry, city: city, date: date }) + '</p>',
         '</div>',
 
+        // 合规说明
         '<div class="ai-plan__block">',
         '  <h4>' + deptT("complianceTitle") + '</h4>',
         '  <p>' + deptT("complianceText", { entry: entry }) + '</p>',
         '</div>',
 
+        // 项目介绍（分类清单）
         '<div class="ai-plan__block">',
         '  <h4>' + deptT("projectsTitle") + '</h4>',
         '  <div class="ai-plan__group">',
@@ -810,6 +796,7 @@
         '  </div>',
         '</div>',
 
+        // 诊所推荐
         '<div class="ai-plan__block">',
         '  <h4>' + deptT("clinicTitle") + '</h4>',
         '  <p>' + deptT("clinicIntro", { city: city }) + '</p>',
@@ -824,60 +811,48 @@
         '    <p>' + _T("clinic." + cityKey + ".2.adv") + '</p>',
         '  </div>',
         '</div>',
-
-        // 第二轮：追问具体需求
-        '<div class="ai-plan__block ai-plan__block--question">',
-        '  <h4>' + deptT("question") + '</h4>',
-        '  <div class="ai-plan__options">',
-        '    <button type="button" class="ai-plan__option" data-choice="A">' + deptT("optA") + '</button>',
-        '    <button type="button" class="ai-plan__option" data-choice="B">' + deptT("optB") + '</button>',
-        '    <button type="button" class="ai-plan__option" data-choice="C">' + deptT("optC") + '</button>',
-        '  </div>',
-        '</div>',
       ].join("");
 
-      // 选项点击：显示用户回复 + AI 追问 + 项目/医生
-      aiPlanBody.querySelectorAll(".ai-plan__option").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          aiPlanBody.querySelectorAll(".ai-plan__option").forEach(function (b) {
-            b.classList.remove("is-selected");
-            b.disabled = true;
-          });
-          btn.classList.add("is-selected");
-          const choice = btn.dataset.choice;
-          const choiceText = btn.textContent;
+      // 项目介绍卡片（按当前科室默认展示）
+      const map = CHOICE_SUB_PROJ[currentDept] || CHOICE_SUB_PROJ.beauty;
+      appendProjects(map.A || map.B || map.C || ["A1", "A2", "A3"]);
 
-          // 追加用户消息气泡
-          appendMessage("user", choiceText);
+      // 医生介绍（体检科室不展示医生）
+      if (currentDept !== "checkup") {
+        appendDoctors();
+      }
 
-          // 0.6s 后 AI 回应
-          setTimeout(function () {
-            // 移除外层问题卡片（视觉上消失），但保留消息流
-            const oldBlock = aiPlanBody.querySelector(".ai-plan__block--question");
-            if (oldBlock) oldBlock.remove();
+      // 底部：重新填写问卷按钮（替代原 A/B/C 互动追问）
+      appendRestartRow();
+    }
 
-            appendMessage("bot", deptT("botChoice", { name: userName }));
-
-            // 按用户追问选项渲染对应子项目（而不是统一展示3个）
-            appendChoiceProjects(btn.dataset.choice);
-
-            // 渲染医生列表（可勾选）；体检科室不展示医生
-            if (currentDept !== "checkup") {
-              appendDoctors();
-            }
-
-            // 最后一句话
-            setTimeout(function () {
-              appendMessage("bot", _T("ap.botChoice2"));
-              if (aiPlanBody) aiPlanBody.scrollTop = aiPlanBody.scrollHeight;
-            }, 400);
-
-            if (aiPlanBody) aiPlanBody.scrollTop = aiPlanBody.scrollHeight;
-          }, 600);
-
-          if (aiPlanBody) aiPlanBody.scrollTop = aiPlanBody.scrollHeight;
+    // 追加"重新填写问卷"按钮行
+    function appendRestartRow() {
+      if (!aiPlanBody) return;
+      const row = document.createElement("div");
+      row.className = "ai-plan__restart-row";
+      row.innerHTML = '<button type="button" class="ai-plan__restart-btn" id="aiPlanRestartBtn">' + ((window.__t && window.__t("aiplan.restart")) || "重新填写问卷") + '</button>' +
+        '<p class="ai-plan__restart-tip">' + ((window.__t && window.__t("aiplan.restartTip")) || "重新提交问卷后，以上信息将被覆盖。") + '</p>';
+      aiPlanBody.appendChild(row);
+      const restartBtn = document.getElementById("aiPlanRestartBtn");
+      if (restartBtn) {
+        restartBtn.addEventListener("click", function () {
+          // 清空本地最近一条就诊记录，避免下次再点气泡时仍恢复旧数据
+          if (window.__clearLastMedicalRecord) {
+            window.__clearLastMedicalRecord();
+          } else {
+            try { localStorage.removeItem("zhuozheng_medical_history"); } catch (e) { /* ignore */ }
+          }
+          // 切换到全新问卷视图（方案视图关闭，问卷弹窗自动打开）
+          resetQuiz();
+          // 确保 modal 处于打开状态
+          if (modal) {
+            modal.classList.add("is-open");
+            modal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+          }
         });
-      });
+      }
     }
 
     // 追加消息气泡（一次性显示完整内容，不再使用流式打字效果）
@@ -1505,95 +1480,6 @@
       if (count > 0) {
         aiPlanConfirm.textContent = _T("aiplan.confirmCount", { count: count });
       }
-      updateSelectedSummary();
-      updatePickedText();
-    }
-
-    // 在"确认选择"按钮下方实时显示灰色已选摘要
-    function updatePickedText() {
-      if (!aiPlanPicked) return;
-      const checkedProjects = [];
-      const checkedDoctors = [];
-      aiPlanBody.querySelectorAll(".ai-plan__selectable input[type=checkbox]:checked").forEach(function (cb) {
-        const card = cb.closest(".ai-plan__selectable");
-        if (!card) return;
-        const head = card.querySelector(".ai-plan__selectable-head strong");
-        const price = card.querySelector(".ai-plan__selectable-price");
-        const name = head ? head.textContent.trim() : "";
-        if (!name) return;
-        // 有价格的是项目，无价格的是医生
-        if (price) {
-          checkedProjects.push(name);
-        } else {
-          checkedDoctors.push(name);
-        }
-      });
-
-      if (checkedProjects.length === 0 && checkedDoctors.length === 0) {
-        aiPlanPicked.hidden = true;
-        aiPlanPicked.textContent = "";
-        return;
-      }
-
-      const parts = [];
-      if (checkedProjects.length > 0) {
-        parts.push(_T("aiplan.intentProjects") + checkedProjects.join("、"));
-      }
-      if (checkedDoctors.length > 0) {
-        parts.push(_T("aiplan.intentDoctors") + checkedDoctors.join("、"));
-      }
-      aiPlanPicked.textContent = _T("aiplan.pickedPrefix") + parts.join("，");
-      aiPlanPicked.hidden = false;
-    }
-
-    // 更新已选汇总条（在 AI 方案页顶部持续可见）
-    function updateSelectedSummary() {
-      if (!aiPlanBody) return;
-
-      let summary = aiPlanBody.querySelector(".ai-plan__selected-summary");
-      if (!summary) {
-        // 创建汇总条（插入到 ai-plan-body 顶部）
-        summary = document.createElement("div");
-        summary.className = "ai-plan__selected-summary";
-        aiPlanBody.insertBefore(summary, aiPlanBody.firstChild);
-      }
-
-      const checked = aiPlanBody.querySelectorAll(".ai-plan__selectable input[type=checkbox]:checked");
-      if (checked.length === 0) {
-        summary.classList.remove("is-visible");
-        summary.innerHTML = "";
-        return;
-      }
-
-      summary.classList.add("is-visible");
-      let html = "<strong>" + _T("ap.selectedSummary", { count: checked.length }) + "</strong>";
-      checked.forEach(function (cb) {
-        const card = cb.closest(".ai-plan__selectable");
-        const head = card ? card.querySelector(".ai-plan__selectable-head strong") : null;
-        if (head) {
-          const name = head.textContent.trim();
-          const id = "chip-" + name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, "");
-          html += '<span class="ai-plan__chip" data-card-id="' + id + '">' + name + ' <span class="ai-plan__chip--remove" data-uncheck="' + id + '" title="移除">×</span></span>';
-          card.dataset.cardId = id;
-        }
-      });
-      summary.innerHTML = html;
-
-      // 点击汇总条中的 × 时，取消对应的勾选
-      summary.querySelectorAll(".ai-plan__chip--remove").forEach(function (x) {
-        x.addEventListener("click", function (e) {
-          e.stopPropagation();
-          const id = this.dataset.uncheck;
-          const card = aiPlanBody.querySelector('[data-card-id="' + id + '"]');
-          if (card) {
-            const cb = card.querySelector("input[type=checkbox]");
-            if (cb && !cb.disabled) {
-              cb.checked = false;
-              updateConfirmBtn();
-            }
-          }
-        });
-      });
     }
 
     // 委托监听所有 checkbox 变化
@@ -1649,15 +1535,8 @@
           cb.disabled = true;
         });
 
-        // 确认选择后，隐藏"已选择"摘要条与下方 picked 区
-        const summaryEl = aiPlanBody.querySelector(".ai-plan__selected-summary");
-        if (summaryEl) summaryEl.hidden = true;
-        if (aiPlanPicked) aiPlanPicked.hidden = true;
-
-        // AI 回复 + 三个后续选项
-        setTimeout(function () {
-          appendPostActionOptions(checkedProjects, checkedDoctors);
-        }, 600);
+        // AI 直接回复通知，不再追加三个追问选项
+        appendMessage("bot", _T("aiplan.agentNoticed"));
       });
     }
 
@@ -2069,9 +1948,47 @@
       }
     };
 
+    // 清空最近一条就诊记录（用户点击"重新填写问卷"时使用）
+    window.__clearLastMedicalRecord = function () {
+      try { localStorage.removeItem(HISTORY_KEY); } catch (e) { /* ignore */ }
+    };
+
     // 点击 AI 气泡：直接进入完整方案流程（与问卷后页面一致）
     bubble.addEventListener("click", function () {
+      hideBubbleCard();
       if (window.__openQuizModal) window.__openQuizModal();
+    });
+
+    // ---------- agent 总结浮层（提交预约后展示 8s 自动消失） ----------
+    const card = document.getElementById("aiBubbleCard");
+    const cardSummary = document.getElementById("aiBubbleCardSummary");
+    let cardTimer = null;
+
+    function hideBubbleCard() {
+      if (!card) return;
+      card.hidden = true;
+      if (cardTimer) { clearTimeout(cardTimer); cardTimer = null; }
+    }
+    window.__hideBubbleCard = hideBubbleCard;
+
+    window.__showBubbleCard = function (info) {
+      if (!card) return;
+      if (cardSummary) {
+        const tpl = (window.__t && window.__t("aiBubble.recorded")) || "已为您记录本次预约（{summary}）";
+        cardSummary.textContent = tpl.replace(/\{summary\}/g, info.summary || "");
+      }
+      card.hidden = false;
+      if (cardTimer) clearTimeout(cardTimer);
+      cardTimer = setTimeout(function () {
+        card.hidden = true;
+        cardTimer = null;
+      }, 8000);
+    };
+
+    // 语言切换时，重渲染浮层文本（保留最近一条记录的内容）
+    document.addEventListener("langchange", function () {
+      if (!card || card.hidden) return;
+      // applyLang 已经把 data-i18n 节点替换为当前语言，无需额外操作
     });
   })();
 })();

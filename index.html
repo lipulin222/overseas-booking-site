@@ -196,9 +196,14 @@
         <circle cx="34" cy="16" r="1" fill="#fff" opacity="0.6"/>
       </svg>
     </div>
-    <span class="ai-bubble__label" data-i18n="aiBubble.label">AI 陪诊</span>
-    <span class="ai-bubble__dot"></span>
   </button>
+
+  <!-- 气泡旁 agent 总结浮层（提交预约后弹出） -->
+  <div class="ai-bubble__card" id="aiBubbleCard" hidden>
+    <div class="ai-bubble__card-title" data-i18n="aiBubble.summaryTitle">预约已记录</div>
+    <div class="ai-bubble__card-summary" id="aiBubbleCardSummary"></div>
+    <div class="ai-bubble__card-hint" data-i18n="aiBubble.summaryHint">点击右下方「预约助手」可查看本次预约详情</div>
+  </div>
 
   <!-- 问卷弹窗（含 AI 方案对话页） -->
   <div class="modal" id="quizModal" aria-hidden="true" role="dialog">
@@ -350,12 +355,12 @@
                 <input type="text" name="quiz_name" required placeholder="您的姓名" data-i18n-placeholder="quiz.q8.name.ph" />
               </label>
               <label class="quiz__field">
-                <span data-i18n-html="quiz.q8.phoneHtml">手机号（选填）</span>
+                <span data-i18n-html="quiz.q8.phoneHtml">手机号</span>
                 <input type="tel" name="quiz_phone" placeholder="联系电话（含国家代码）" data-i18n-placeholder="quiz.q8.phone.ph" />
               </label>
               <label class="quiz__field">
                 <span data-i18n="quiz.q8.email">邮箱</span>
-                <input type="email" name="quiz_email" placeholder="电子邮箱（选填）" data-i18n-placeholder="quiz.q8.email.ph" />
+                <input type="email" name="quiz_email" placeholder="电子邮箱" data-i18n-placeholder="quiz.q8.email.ph" />
               </label>
             </div>
           </div>
@@ -366,31 +371,6 @@
           <button type="button" class="btn btn--ghost" id="quizPrev" disabled data-i18n="quiz.prev">上一步</button>
           <button type="button" class="btn btn--primary" id="quizNext" data-i18n="quiz.next">下一步</button>
           <button type="button" class="btn btn--primary" id="quizSubmit" hidden data-i18n="quiz.submit">提交预约</button>
-        </div>
-      </div>
-
-      <!-- 中转页：AI 陪诊分析中 -->
-      <div class="quiz__loading" id="quizLoading" hidden>
-        <div class="quiz__loading-avatar">
-          <svg viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="23" fill="url(#aiLoadGradient)"/>
-            <defs>
-              <linearGradient id="aiLoadGradient" x1="0" y1="0" x2="48" y2="48">
-                <stop offset="0" stop-color="#1e8a8a"/>
-                <stop offset="1" stop-color="#0d6b6b"/>
-              </linearGradient>
-            </defs>
-            <circle cx="18" cy="22" r="2.5" fill="#fff"/>
-            <circle cx="30" cy="22" r="2.5" fill="#fff"/>
-            <path d="M17 29Q24 33 31 29" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
-          </svg>
-        </div>
-        <div class="quiz__loading-dots">
-          <span></span><span></span><span></span>
-        </div>
-        <div class="quiz__loading-text">
-          <p class="quiz__loading-line is-active" data-i18n="loading.1">AI陪诊正在了解您的情况...</p>
-          <p class="quiz__loading-line" data-i18n="loading.2">AI陪诊正在制定适合您的就诊方案...</p>
         </div>
       </div>
 
@@ -405,10 +385,6 @@
               <path d="M17 29Q24 33 31 29" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
             </svg>
           </div>
-          <div class="quiz__ai-plan__info">
-            <strong data-i18n="aiplan.title">AI 陪诊助手</strong>
-            <span data-i18n="aiplan.subtitle">已为您生成就诊方案</span>
-          </div>
         </div>
 
         <div class="quiz__ai-plan__body" id="aiPlanBody">
@@ -418,12 +394,6 @@
         <div class="quiz__ai-plan__footer">
           <button type="button" class="ai-plan__confirm" id="aiPlanConfirm" hidden data-i18n="aiplan.confirm">确认选择</button>
           <p class="ai-plan__picked" id="aiPlanPicked" hidden></p>
-          <div class="ai-plan__input-row">
-            <input type="text" class="ai-plan__input" id="aiPlanInput" placeholder="输入您的问题..." data-i18n-placeholder="aiplan.placeholder" />
-            <button type="button" class="ai-plan__send" id="aiPlanSend" aria-label="发送" data-i18n-aria-label="aiplan.send">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M3 12L21 4L13 22L11 14L3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -431,6 +401,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" async></script>
   <script src="i18n.js"></script>
+  <script src="dingtalk.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

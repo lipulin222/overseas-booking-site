@@ -1796,7 +1796,12 @@ button {
 .quiz__ai-plan__avatar {
   width: 36px;
   height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .quiz__ai-plan__avatar svg {
@@ -2598,6 +2603,40 @@ button {
   height: 18px;
 }
 
+/* ===== 预约助手：重新填写问卷按钮（精简模式下专用） ===== */
+.ai-plan__restart-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0 12px;
+}
+.ai-plan__restart-tip {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #9aa5a5;
+  text-align: center;
+}
+.ai-plan__restart-btn {
+  appearance: none;
+  border: 1px solid #cfd9d9;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 22px;
+  border-radius: 999px;
+  background: transparent;
+  color: #5a6a6a;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.ai-plan__restart-btn:hover {
+  border-color: #1e8a8a;
+  color: #1e8a8a;
+  background: rgba(30, 138, 138, 0.06);
+}
+
 /* ===== 页脚 ===== */
 .footer {
   background: var(--bg-dark);
@@ -2733,15 +2772,18 @@ button {
   z-index: 60;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px 8px 8px;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(26, 43, 43, 0.15);
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: transparent;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(26, 43, 43, 0.18);
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
+  overflow: hidden;
 }
 
 .ai-bubble:hover {
@@ -2750,11 +2792,19 @@ button {
 }
 
 .ai-bubble__avatar {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ai-bubble__avatar svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .ai-bubble__avatar svg {
@@ -2784,6 +2834,70 @@ button {
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+/* ===== 气泡旁 agent 总结浮层 ===== */
+.ai-bubble__card {
+  position: fixed;
+  right: 24px;
+  bottom: 160px;
+  z-index: 60;
+  width: 280px;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(26, 43, 43, 0.18);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  animation: bubbleCardIn 0.4s ease;
+}
+.ai-bubble__card[hidden] {
+  display: none;
+}
+.ai-bubble__card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0d6b6b;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+.ai-bubble__card-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted, #5a6a6a);
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.ai-bubble__card-name {
+  font-weight: 600;
+  color: var(--text);
+}
+.ai-bubble__card-summary {
+  font-size: 13px;
+  color: var(--text);
+  background: #f3f8f8;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+.ai-bubble__card-hint {
+  font-size: 12px;
+  color: var(--text-muted, #5a6a6a);
+}
+@keyframes bubbleCardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 640px) {
+  .ai-bubble__card {
+    right: 16px;
+    bottom: 156px;
+    width: calc(100vw - 32px);
+    max-width: 320px;
+  }
 }
 
 /* ===== AI 对话浮层 ===== */

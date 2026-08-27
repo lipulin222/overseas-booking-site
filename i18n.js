@@ -215,20 +215,24 @@
       "quiz.q8.wechat": "",
       "quiz.q8.wechat.ph": "",
       "quiz.q8.email": "邮箱",
-      "quiz.q8.email.ph": "电子邮箱（选填）",
+      "quiz.q8.email.ph": "电子邮箱",
       "quiz.q8.hotel": "",
       "quiz.q8.hotel.ph": "",
 
       "loading.1": "AI陪诊正在了解您的情况...",
       "loading.2": "AI陪诊正在制定适合您的就诊方案...",
 
-      "aiplan.title": "AI 陪诊助手",
-      "aiplan.subtitle": "已为您生成就诊方案",
+      "aiplan.title": "预约助手",
+      "aiplan.subtitle": "您已完成本次预约",
       "aiplan.confirm": "确认选择",
       "aiplan.confirmCount": "确认选择（{count}）",
       "aiplan.placeholder": "输入您的问题...",
       "aiplan.send": "发送",
-      "aiplan.pickedPrefix": "已选择 "
+      "aiplan.pickedPrefix": "已选择 ",
+      "aiplan.completedText": "您已成功提交本次预约。如需调整信息，请点击下方按钮重新填写问卷。",
+      "aiplan.restart": "重新填写问卷",
+      "aiplan.restartTip": "重新提交问卷后，以上信息将被覆盖。",
+      "aiplan.agentNoticed": "我们已经初步了解您的医疗需求，会有专人联系您进一步沟通，请留意留您的手机和邮箱。"
     },
 
     en: {
@@ -438,20 +442,24 @@
       "quiz.q8.wechat": "",
       "quiz.q8.wechat.ph": "",
       "quiz.q8.email": "Email",
-      "quiz.q8.email.ph": "Email (optional)",
+      "quiz.q8.email.ph": "Email",
       "quiz.q8.hotel": "",
       "quiz.q8.hotel.ph": "",
 
       "loading.1": "AI assistant is reviewing your information...",
       "loading.2": "AI assistant is preparing your care plan...",
 
-      "aiplan.title": "AI Care Assistant",
-      "aiplan.subtitle": "Your care plan is ready",
+      "aiplan.title": "Booking Assistant",
+      "aiplan.subtitle": "Your booking has been submitted",
       "aiplan.confirm": "Confirm Selection",
       "aiplan.confirmCount": "Confirm Selection ({count})",
       "aiplan.placeholder": "Type your question...",
       "aiplan.send": "Send",
-      "aiplan.pickedPrefix": "Selected "
+      "aiplan.pickedPrefix": "Selected ",
+      "aiplan.completedText": "Your booking has been submitted successfully. Click the button below to refill the questionnaire if you need to make changes.",
+      "aiplan.restart": "Refill Questionnaire",
+      "aiplan.restartTip": "After resubmitting the questionnaire, the above information will be overwritten.",
+      "aiplan.agentNoticed": "We now have a preliminary understanding of your medical needs, and a specialist will contact you for further discussion. Please keep an eye on the phone and email you left."
     },
 
     ja: {
@@ -661,20 +669,24 @@
       "quiz.q8.wechat": "",
       "quiz.q8.wechat.ph": "",
       "quiz.q8.email": "メール",
-      "quiz.q8.email.ph": "メール（任意）",
+      "quiz.q8.email.ph": "メール",
       "quiz.q8.hotel": "",
       "quiz.q8.hotel.ph": "",
 
       "loading.1": "AI付き添いが状況を確認しています...",
       "loading.2": "AI付き添いが受診プランを作成しています...",
 
-      "aiplan.title": "AI付き添いアシスタント",
-      "aiplan.subtitle": "受診プランを作成しました",
+      "aiplan.title": "予約アシスタント",
+      "aiplan.subtitle": "ご予約が完了しました",
       "aiplan.confirm": "選択を確定",
       "aiplan.confirmCount": "選択を確定（{count}）",
       "aiplan.placeholder": "ご質問を入力...",
       "aiplan.send": "送信",
-      "aiplan.pickedPrefix": "選択済み "
+      "aiplan.pickedPrefix": "選択済み ",
+      "aiplan.completedText": "ご予約の送信が完了しました。情報を修正されたい場合は、下のボタンから問票に再度ご入力ください。",
+      "aiplan.restart": "問票に再入力",
+      "aiplan.restartTip": "再送信後、上記の情報は上書きされます。",
+      "aiplan.agentNoticed": "お客様の医療ニーズを把握しましたので、担当者より改めてご連絡いたします。ご登録の電話番号・メールをご確認ください。"
     }
   };
 
@@ -1201,7 +1213,10 @@
   // 额外词条（第二批）：AI 气泡 / AI 对话浮层
   var EXTRA2 = {
     zh: {
-      "aiBubble.label": "AI 陪诊",
+      "aiBubble.label": "预约助手",
+      "aiBubble.summaryTitle": "预约已记录",
+      "aiBubble.recorded": "已为您记录本次预约（{summary}）",
+      "aiBubble.summaryHint": "点击右下方「预约助手」可查看本次预约详情",
       "aiChat.title": "AI 陪诊助手",
       "aiChat.status": "在线",
       "aiChat.welcome": "您好！我是 卓正 AI 陪诊助手，欢迎了解、体验卓正高品质的医疗服务。烦请填写“就诊需求收集表”（耗时约1分钟），便于我更好的了解您的需要，为您服务。",
@@ -1216,7 +1231,10 @@
       "aiChat.clear": "清空记录"
     },
     en: {
-      "aiBubble.label": "AI Care",
+      "aiBubble.label": "Booking Assistant",
+      "aiBubble.summaryTitle": "Booking recorded",
+      "aiBubble.recorded": "Booking recorded ({summary})",
+      "aiBubble.summaryHint": "Click the Booking Assistant at the bottom-right to view the details",
       "aiChat.title": "AI Care Assistant",
       "aiChat.status": "Online",
       "aiChat.welcome": "Hello! I'm the Distinct Medical AI Care Assistant. Feel free to explore our premium care. Please fill in the 'Visit Needs Form' (≈1 min) so I can better understand your needs and serve you.",
@@ -1231,7 +1249,10 @@
       "aiChat.clear": "Clear history"
     },
     ja: {
-      "aiBubble.label": "AI付き添い",
+      "aiBubble.label": "予約アシスタント",
+      "aiBubble.summaryTitle": "予約を記録しました",
+      "aiBubble.recorded": "予約を記録しました（{summary}）",
+      "aiBubble.summaryHint": "右下の「予約アシスタント」をクリックすると詳細をご確認いただけます",
       "aiChat.title": "AI付き添いアシスタント",
       "aiChat.status": "オンライン",
       "aiChat.welcome": "こんにちは。卓正医療 AI付き添いアシスタントです。ぜひ当院の質の高い医療をご体験ください。「受診ニーズフォーム」（約1分）にご記入いただくと、ご希望を把握しやすくなります。",
@@ -1254,15 +1275,15 @@
   var EXTRA3 = {
     zh: {
       "quiz.q8.nameHtml": "姓名 <em>*</em>",
-      "quiz.q8.phoneHtml": "手机号（选填）"
+      "quiz.q8.phoneHtml": "手机号"
     },
     en: {
       "quiz.q8.nameHtml": "Name <em>*</em>",
-      "quiz.q8.phoneHtml": "Phone (optional)"
+      "quiz.q8.phoneHtml": "Phone"
     },
     ja: {
       "quiz.q8.nameHtml": "お名前 <em>*</em>",
-      "quiz.q8.phoneHtml": "電話番号（任意）"
+      "quiz.q8.phoneHtml": "電話番号"
     }
   };
   Object.keys(EXTRA3).forEach(function (lang) {
