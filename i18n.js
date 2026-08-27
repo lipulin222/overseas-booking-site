@@ -1,6 +1,6 @@
 /* =========================================================================
  * 卓正医疗 Demo - 国际化字典
- * 支持语言：中文(zh) / 英文(en) / 日文(ja)
+ * 支持语言：中文(zh) / 繁体中文(zh-TW) / 英文(en) / 日文(ja)
  * 页面元素通过 data-i18n / data-i18n-html / data-i18n-placeholder 标记
  * 动态内容通过 window.__t(key) 获取当前语言文本
  * ========================================================================= */
@@ -2597,6 +2597,23 @@
     return cur;
   }
 
+  // 简体 -> 繁体（基于 OpenCC STCharacters 单字映射，运行时逐字转换）
+  function toTraditional(s) {
+    if (!s || !global.__S2T) return s;
+    return String(s).replace(/[㐀-鿿]/g, function (ch) {
+      return global.__S2T[ch] || ch;
+    });
+  }
+
+  // 懒构建繁体字典：复用简体词条并整体转繁
+  function buildTraditional() {
+    if (I18N["zh-TW"] || !global.__S2T) return;
+    var src = I18N.zh || {};
+    var out = {};
+    Object.keys(src).forEach(function (k) { out[k] = toTraditional(src[k]); });
+    I18N["zh-TW"] = out;
+  }
+
   function t(key, vars) {
     var dict = I18N[currentLang] || I18N.zh;
     var val = getByPath(dict, key);
@@ -2610,6 +2627,7 @@
   }
 
   function applyLang(code) {
+    if (code === "zh-TW") buildTraditional();
     currentLang = (I18N[code] ? code : "zh");
 
     // data-i18n：纯文本替换
@@ -2641,7 +2659,7 @@
     });
 
     // html lang
-    document.documentElement.lang = (code === "ja" ? "ja" : (code === "en" ? "en" : "zh-CN"));
+    document.documentElement.lang = (code === "ja" ? "ja" : (code === "en" ? "en" : (code === "zh-TW" ? "zh-Hant" : "zh-CN")));
 
     // 通知动态内容更新（轮播文案、问卷进度等）
     document.dispatchEvent(new CustomEvent("langchange", { detail: { code: currentLang } }));

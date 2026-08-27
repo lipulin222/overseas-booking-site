@@ -139,7 +139,7 @@
   <div class="top-bar">
     <div class="container top-bar__inner">
       <div class="top-bar__lang">
-        <span class="top-bar__current"><span data-i18n="topbar.lang">当前语言：</span><strong>中文</strong></span>
+        <span class="top-bar__current"><span data-i18n="topbar.lang">当前语言：</span><strong id="currentLangLabel">中文</strong></span>
         <button class="top-bar__switch" id="langSwitch" type="button" aria-label="切换语言">
           <span data-i18n="topbar.switch">切换</span>
         </button>
@@ -400,6 +400,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" async></script>
+  <script src="opencc-s2t.js"></script>
   <script src="i18n.js"></script>
   <script src="dingtalk.js"></script>
   <script src="script.js"></script>

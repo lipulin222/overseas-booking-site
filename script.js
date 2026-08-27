@@ -121,10 +121,19 @@
   /* ---------- 语言切换（demo） ---------- */
   const langList = [
     { code: "zh", label: "中文" },
+    { code: "zh-TW", label: "繁體中文" },
     { code: "en", label: "EN" },
     { code: "ja", label: "日本語" },
   ];
   let langIdx = 0;
+
+  // 顶部「当前语言」标签随切换更新
+  document.addEventListener("langchange", function (e) {
+    var lbl = document.getElementById("currentLangLabel");
+    if (!lbl) return;
+    var item = langList.filter(function (x) { return x.code === e.detail.code; })[0];
+    if (item) lbl.textContent = item.label;
+  });
 
   const langSwitch = document.getElementById("langSwitch");
   const langCurrent = document.querySelector(".top-bar__current strong");
